@@ -1,25 +1,32 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState } from "react";
 
 function App() {
+  let [mile, setMile] = useState("");
+  let [meter, setMeter] = useState("");
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="container">
+        <div class="input-group">
+          <label for="mileInput" className="label">Mile:</label>
+          <input id="mileInput" className="textbox" type="number" value={mile} onChange={onMileChange}></input>
+        </div>
+        <div class="input-group">
+          <label for="meterInput" className="label">Meter:</label>
+          <input id="meterInput" className="textbox" type="number" value={meter} onChange={onMeterChange}></input>
+        </div>
+      </div>
     </div>
   );
+
+  function onMileChange(e) {
+    setMile(e.target.value);
+  }
+
+  function onMeterChange(e) {
+    setMeter(e.target.value);
+  }
 }
 
 export default App;
