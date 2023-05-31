@@ -1,27 +1,29 @@
-import { useState, useEffect } from "react";
-import { useCalculateMeter } from './api';
-import { debounce, useDebounce } from './util';
+import { useRef } from "react";
+import { calculateMeter, calculateMile } from './service';
 
 import './App.css';
 
 function App() {
-  const [mile, setMile] = useState("");
-  const [meter, setMeter] = useState("");
-  const debounceMile = useDebounce(mile, 400);
+  
+  const mileRef = useRef(null);
+  const meterRef = useRef(null);
 
-  const calculatedMeter = useCalculateMeter(debounceMile);
-
-  useEffect(() => {
-    if (calculatedMeter) {
-      setMeter(calculatedMeter);
-    }
-  }, [calculatedMeter]);
-
-  const handleMileInputChange = (event) => {
+  const handleInputChange = (type) => async (event) => {
     const value = event.target.value;
-    setMile(value);
+    switch(type) {
+      case 'MILE_UPDATED':
+        const meter = await calculateMeter(value);
+        meterRef.current.value = meter;
+        break;
+      case 'METER_UPDATED':
+        const mile = await calculateMile(value);
+        mileRef.current.value = mile;
+        break;
+      default:
+        break;
+    }
   };
-
+  
   return (
     <div className="App">
       <div className="container">
@@ -31,8 +33,10 @@ function App() {
             id="mileInput" 
             className="textbox"
             type="number"
-            value={mile}
-            onChange={handleMileInputChange}/>
+            ref={mileRef}
+            onChange={handleInputChange('MILE_UPDATED')}
+            
+            />
         </div>
         <div className="input-group">
           <label htmlFor="meterInput" className="label">Meter:</label>
@@ -40,8 +44,8 @@ function App() {
             id="meterInput" 
             className="textbox" 
             type="number" 
-            value={meter} 
-            //onChange={handleMeterInputChange}
+            ref={meterRef}
+            onChange={handleInputChange('METER_UPDATED')}
           />
         </div>
       </div>

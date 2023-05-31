@@ -1,7 +1,7 @@
 import axios from "axios";
-import configData from "../config.json";
+import { config } from "../config";
 
-const BaseApiUrl = configData.ApiUrl;
+const { ApiUrl: BaseApiUrl } = config;
 
 export async function calculation(options) {
     return await axios.post(`${BaseApiUrl}/Calculation`, options)
