@@ -1,21 +1,36 @@
 import { useRef } from "react";
+import { ToastContainer } from "react-toastify";
+
 import { calculateMeter, calculateMile } from './service';
 
 import './App.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   
+  const mileUpdated = 'MILE_UPDATED';
+  const meterUpdated = 'METER_UPDATED';
+
   const mileRef = useRef(null);
   const meterRef = useRef(null);
 
   const handleInputChange = (type) => async (event) => {
     const value = event.target.value;
+    const isInvalidNumber = !value || isNaN(value) || value < 0;
     switch(type) {
-      case 'MILE_UPDATED':
+      case mileUpdated:
+        if (isInvalidNumber) {
+          meterRef.current.value = -1;
+          return;
+        }
         const meter = await calculateMeter(value);
         meterRef.current.value = meter;
         break;
-      case 'METER_UPDATED':
+      case meterUpdated:
+        if (isInvalidNumber) {
+          mileRef.current.value = -1;
+          return;
+        }
         const mile = await calculateMile(value);
         mileRef.current.value = mile;
         break;
@@ -34,8 +49,7 @@ function App() {
             className="textbox"
             type="number"
             ref={mileRef}
-            onChange={handleInputChange('MILE_UPDATED')}
-            
+            onChange={handleInputChange(mileUpdated)}
             />
         </div>
         <div className="input-group">
@@ -45,10 +59,11 @@ function App() {
             className="textbox" 
             type="number" 
             ref={meterRef}
-            onChange={handleInputChange('METER_UPDATED')}
+            onChange={handleInputChange(meterUpdated)}
           />
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

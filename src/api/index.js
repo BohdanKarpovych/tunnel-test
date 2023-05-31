@@ -1,1 +1,1 @@
-export * from './api-accessor';
+export * from './api';

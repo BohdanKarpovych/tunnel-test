@@ -16,13 +16,14 @@ export const calculateMeter = async (mile) => {
         });
         if (result) {
             return result.distanceInTunnel;
-        } 
+        }
     }
     return -1;
 };
 
 export const calculateMile = async (meter) => {
     const tunnels = await getAllTunnels();
+    // Get first tunnel which has the minimum length
     const tunnel = tunnels.find(({start, end}) => mileToMeter(start - end) >= meter);
     if (tunnel) {
         const result = await calculation({
