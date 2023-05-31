@@ -1,32 +1,52 @@
+import { useState, useEffect } from "react";
+import { useCalculateMeter } from './api';
+import { debounce, useDebounce } from './util';
+
 import './App.css';
-import { useState } from "react";
 
 function App() {
-  let [mile, setMile] = useState("");
-  let [meter, setMeter] = useState("");
+  const [mile, setMile] = useState("");
+  const [meter, setMeter] = useState("");
+  const debounceMile = useDebounce(mile, 400);
+
+  const calculatedMeter = useCalculateMeter(debounceMile);
+
+  useEffect(() => {
+    if (calculatedMeter) {
+      setMeter(calculatedMeter);
+    }
+  }, [calculatedMeter]);
+
+  const handleMileInputChange = (event) => {
+    const value = event.target.value;
+    setMile(value);
+  };
 
   return (
     <div className="App">
       <div className="container">
-        <div class="input-group">
-          <label for="mileInput" className="label">Mile:</label>
-          <input id="mileInput" className="textbox" type="number" value={mile} onChange={onMileChange}></input>
+        <div className="input-group">
+          <label htmlFor="mileInput" className="label">Mile:</label>
+          <input
+            id="mileInput" 
+            className="textbox"
+            type="number"
+            value={mile}
+            onChange={handleMileInputChange}/>
         </div>
-        <div class="input-group">
-          <label for="meterInput" className="label">Meter:</label>
-          <input id="meterInput" className="textbox" type="number" value={meter} onChange={onMeterChange}></input>
+        <div className="input-group">
+          <label htmlFor="meterInput" className="label">Meter:</label>
+          <input 
+            id="meterInput" 
+            className="textbox" 
+            type="number" 
+            value={meter} 
+            //onChange={handleMeterInputChange}
+          />
         </div>
       </div>
     </div>
   );
-
-  function onMileChange(e) {
-    setMile(e.target.value);
-  }
-
-  function onMeterChange(e) {
-    setMeter(e.target.value);
-  }
 }
 
 export default App;
